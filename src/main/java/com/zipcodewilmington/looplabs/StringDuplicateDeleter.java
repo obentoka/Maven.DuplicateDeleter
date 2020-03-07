@@ -17,29 +17,43 @@ public final class StringDuplicateDeleter extends DuplicateDeleter<String> {
 
     @Override
     public String[] removeDuplicates(int maxNumberOfDuplications) {
-        Map<String, Integer> count = new HashMap<>();
-        Integer size = 0;
-        for(String e : this.array){
-            if(!count.containsKey(e))
-                count.put(e, 1);
-            else {
-                Integer curVal = count.get(e);
-                count.replace(e, curVal, curVal + 1);
+        Integer differentNumbers = 1;
+        for (int i = 1; i < array.length; i++) {
+            if(!array[i].equals(array[i-1]))
+                differentNumbers++;
+        }
+        String[][] mapInt = new String[2][differentNumbers];
+        Integer mapIntCounter = 0;
+        for (int i = 1; i < array.length; i++) {
+            if(i == 1){
+                mapInt[0][mapIntCounter] = array[i-1];
+                mapInt[1][mapIntCounter] = "1";
+            }
+            if(array[i].equals(array[i-1])){
+                mapInt[1][mapIntCounter] += "1";
+            }else {
+                mapIntCounter++;
+                mapInt[0][mapIntCounter] = array[i];
+                mapInt[1][mapIntCounter] = "1";
             }
         }
-        List<String> dupe = new ArrayList<>();
-        for(Map.Entry<String, Integer> e : count.entrySet()){
-            if(e.getValue() >= maxNumberOfDuplications) {
-                dupe.add(e.getKey());
-                size += e.getValue();
-            }
+        Integer sumOfDupes = 0;
+        for (int i = 0; i < differentNumbers; i++) {
+            if(mapInt[1][i].length() >= maxNumberOfDuplications)
+                sumOfDupes += mapInt[1][i].length();
         }
-        String[] retArray = new String[this.array.length - size];
-        Integer counter = 0;
-        for (int i = 0; i < this.array.length; i++) {
-            if(!dupe.contains(this.array[i])){
-                retArray[counter] = this.array[i];
-                counter++;
+        String[] retArray = new String[array.length - sumOfDupes];
+        Integer retArrayCounter = 0;
+        for (int i = 0; i < array.length; i++) {
+            Boolean isNotDupe = true;
+            for (int j = 0; j < differentNumbers; j++) {
+                if(mapInt[0][j].equals(array[i]) && mapInt[1][j].length() >= maxNumberOfDuplications){
+                    isNotDupe = false;
+                }
+            }
+            if(isNotDupe) {
+                retArray[retArrayCounter] = array[i];
+                retArrayCounter++;
             }
         }
         return retArray;
@@ -47,27 +61,43 @@ public final class StringDuplicateDeleter extends DuplicateDeleter<String> {
 
     @Override
     public String[] removeDuplicatesExactly(int exactNumberOfDuplications) {
-        Map<String, Integer> count = new HashMap<>();
-        Integer size = 0;
-        for(String e : this.array){
-            if(!count.containsKey(e))
-                count.put(e, 1);
-            else
-                count.replace(e, count.get(e), count.get(e)+1);
+        Integer differentNumbers = 1;
+        for (int i = 1; i < array.length; i++) {
+            if(!array[i].equals(array[i-1]))
+                differentNumbers++;
         }
-        List<String> dupe = new ArrayList<>();
-        for(Map.Entry<String, Integer> e : count.entrySet()){
-            if(e.getValue() == exactNumberOfDuplications) {
-                size++;
-                dupe.add(e.getKey());
+        String[][] mapInt = new String[2][differentNumbers];
+        Integer mapIntCounter = 0;
+        for (int i = 1; i < array.length; i++) {
+            if(i == 1){
+                mapInt[0][mapIntCounter] = array[i-1];
+                mapInt[1][mapIntCounter] = "1";
+            }
+            if(array[i].equals(array[i-1])){
+                mapInt[1][mapIntCounter] += "1";
+            }else {
+                mapIntCounter++;
+                mapInt[0][mapIntCounter] = array[i];
+                mapInt[1][mapIntCounter] = "1";
             }
         }
-        String[] retArray = new String[this.array.length - (size * exactNumberOfDuplications)];
-        Integer counter = 0;
-        for (int i = 0; i < this.array.length; i++) {
-            if(!dupe.contains(this.array[i])){
-                retArray[counter] = this.array[i];
-                counter++;
+        Integer sumOfDupes = 0;
+        for (int i = 0; i < differentNumbers; i++) {
+            if(mapInt[1][i].length() == exactNumberOfDuplications)
+                sumOfDupes += mapInt[1][i].length();
+        }
+        String[] retArray = new String[array.length - sumOfDupes];
+        Integer retArrayCounter = 0;
+        for (int i = 0; i < array.length; i++) {
+            Boolean isNotDupe = true;
+            for (int j = 0; j < differentNumbers; j++) {
+                if(mapInt[0][j].equals(array[i]) && mapInt[1][j].length() == exactNumberOfDuplications){
+                    isNotDupe = false;
+                }
+            }
+            if(isNotDupe) {
+                retArray[retArrayCounter] = array[i];
+                retArrayCounter++;
             }
         }
         return retArray;
