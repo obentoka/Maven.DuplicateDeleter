@@ -17,89 +17,37 @@ public final class StringDuplicateDeleter extends DuplicateDeleter<String> {
 
     @Override
     public String[] removeDuplicates(int maxNumberOfDuplications) {
-        Integer differentNumbers = 1;
-        for (int i = 1; i < array.length; i++) {
-            if(!array[i].equals(array[i-1]))
-                differentNumbers++;
-        }
-        String[][] mapInt = new String[2][differentNumbers];
-        Integer mapIntCounter = 0;
-        for (int i = 1; i < array.length; i++) {
-            if(i == 1){
-                mapInt[0][mapIntCounter] = array[i-1];
-                mapInt[1][mapIntCounter] = "1";
-            }
-            if(array[i].equals(array[i-1])){
-                mapInt[1][mapIntCounter] += "1";
-            }else {
-                mapIntCounter++;
-                mapInt[0][mapIntCounter] = array[i];
-                mapInt[1][mapIntCounter] = "1";
-            }
-        }
-        Integer sumOfDupes = 0;
-        for (int i = 0; i < differentNumbers; i++) {
-            if(mapInt[1][i].length() >= maxNumberOfDuplications)
-                sumOfDupes += mapInt[1][i].length();
-        }
-        String[] retArray = new String[array.length - sumOfDupes];
-        Integer retArrayCounter = 0;
+        StringBuilder notDupeArray = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
-            Boolean isNotDupe = true;
-            for (int j = 0; j < differentNumbers; j++) {
-                if(mapInt[0][j].equals(array[i]) && mapInt[1][j].length() >= maxNumberOfDuplications){
-                    isNotDupe = false;
-                }
+            Integer count = 0;
+            for (int j = 0; j < array.length; j++) {
+                if(array[i].equals(array[j]))
+                    count++;
             }
-            if(isNotDupe) {
-                retArray[retArrayCounter] = array[i];
-                retArrayCounter++;
-            }
+            if(!(count >= maxNumberOfDuplications))
+                notDupeArray.append(array[i] + " ");
         }
-        return retArray;
+        if(notDupeArray.length() == 0)
+            return new String[0];
+        else
+            return notDupeArray.toString().split(" ");
     }
 
     @Override
     public String[] removeDuplicatesExactly(int exactNumberOfDuplications) {
-        Integer differentNumbers = 1;
-        for (int i = 1; i < array.length; i++) {
-            if(!array[i].equals(array[i-1]))
-                differentNumbers++;
-        }
-        String[][] mapInt = new String[2][differentNumbers];
-        Integer mapIntCounter = 0;
-        for (int i = 1; i < array.length; i++) {
-            if(i == 1){
-                mapInt[0][mapIntCounter] = array[i-1];
-                mapInt[1][mapIntCounter] = "1";
-            }
-            if(array[i].equals(array[i-1])){
-                mapInt[1][mapIntCounter] += "1";
-            }else {
-                mapIntCounter++;
-                mapInt[0][mapIntCounter] = array[i];
-                mapInt[1][mapIntCounter] = "1";
-            }
-        }
-        Integer sumOfDupes = 0;
-        for (int i = 0; i < differentNumbers; i++) {
-            if(mapInt[1][i].length() == exactNumberOfDuplications)
-                sumOfDupes += mapInt[1][i].length();
-        }
-        String[] retArray = new String[array.length - sumOfDupes];
-        Integer retArrayCounter = 0;
+        StringBuilder notDupeArray = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
-            Boolean isNotDupe = true;
-            for (int j = 0; j < differentNumbers; j++) {
-                if(mapInt[0][j].equals(array[i]) && mapInt[1][j].length() == exactNumberOfDuplications){
-                    isNotDupe = false;
-                }
+            Integer count = 0;
+            for (int j = 0; j < array.length; j++) {
+                if(array[i].equals(array[j]))
+                    count++;
             }
-            if(isNotDupe) {
-                retArray[retArrayCounter] = array[i];
-                retArrayCounter++;
-            }
+            if(!(count == exactNumberOfDuplications))
+                notDupeArray.append(array[i] + " ");
         }
-        return retArray;
+        if(notDupeArray.length() == 0)
+            return new String[0];
+        else
+            return notDupeArray.toString().split(" ");
     }
 }
